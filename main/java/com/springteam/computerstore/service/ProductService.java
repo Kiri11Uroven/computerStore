@@ -1,13 +1,18 @@
 package com.springteam.computerstore.service;
 
+import com.springteam.computerstore.dto.ProductCreationRequest;
+import com.springteam.computerstore.dto.ProductCreationResponse;
 import com.springteam.computerstore.entity.Product;
-import org.springframework.stereotype.Repository;
+import com.springteam.computerstore.entity.ProductType;
 
-@Repository
+import java.util.List;
+
+
 public interface ProductService {
-   Product addProduct();
-   Product findById();
-   Product findAll();
-   Product updateById();
-   boolean exist();//есть ли уже такой товар в базе?
+
+   ProductCreationResponse createProduct(ProductCreationRequest request);
+   ProductCreationResponse getById(Long id);
+   List<Product> getByType(ProductType type);
+   ProductCreationResponse update(Long id, ProductCreationRequest request);
+
 }
