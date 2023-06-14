@@ -1,28 +1,26 @@
 package com.springteam.computerstore.mapper;
 
-import com.springteam.computerstore.config.MapStructConfig;
-import com.springteam.computerstore.dto.ProductCreationRequest;
-import com.springteam.computerstore.dto.ProductCreationResponse;
-import com.springteam.computerstore.entity.Product;
+import com.springteam.computerstore.entity.ProductEntity;
+import com.springteam.computerstore.request.ProductCreationRequest;
+import com.springteam.computerstore.response.data.ProductData;
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 
-
-@Mapper(config = MapStructConfig.class)
+@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface ProductMapper {
+
     /**
-     * Преобразовать {@link ProductCreationRequest} в {@link Product}.
+     * Преобразовать {@link ProductCreationRequest} в {@link ProductEntity}.
      *
      * @param source {@link ProductCreationRequest}
-     * @return {@link Product}
+     * @return {@link ProductEntity}
      */
-
-    Product toProduct(ProductCreationRequest source);
+    ProductEntity toEntity(ProductCreationRequest source);
 
     /**
-     * Преобразовать {@link Product} в {@link ProductCreationResponse}.
-     *
-     * @param source {@link Product}
-     * @return {@link ProductCreationResponse}
+     * Преобразовываем сущность БД в ответ контроллера
+     * @param entity сущность БД
+     * @return ответ контроллера
      */
-    ProductCreationResponse toProductCreationResponse(Product source);
+    ProductData toProductResponse(ProductEntity entity);
 }
