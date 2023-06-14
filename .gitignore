@@ -1,0 +1,11 @@
+# IDE
+## JetBrains IDEA
+.idea/
+out/
+*.iml
+*.ipr
+*.iws
+*.ids
+
+# MAVEN
+target/
