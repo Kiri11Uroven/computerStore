@@ -1,55 +1,15 @@
 package com.springteam.computerstore.service;
 
-import com.springteam.computerstore.entity.ProductEntity;
-import com.springteam.computerstore.exception.ProductNotFound;
-import com.springteam.computerstore.mapper.ProductMapper;
-import com.springteam.computerstore.repository.ProductRepository;
+import com.springteam.computerstore.common.ProductType;
 import com.springteam.computerstore.request.ProductCreationRequest;
 import com.springteam.computerstore.response.data.IdData;
 import com.springteam.computerstore.response.data.ProductData;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.List;
 
-@Service
-@Slf4j
-public class ProductService {
-    private final ProductRepository repository;
-    private final ProductMapper mapper;
-
-    public ProductService(ProductRepository repository,
-                          ProductMapper mapper) {
-        this.repository = repository;
-        this.mapper = mapper;
-    }
-
-    public IdData createProduct(ProductCreationRequest request) {
-        log.debug("entry createProduct(..); {}", request);
-        IdData idData;
-
-        Optional<ProductEntity> optProductEntity = repository.findBySerialNumber(request.serialNumber());
-        if (optProductEntity.isPresent()) {
-            optProductEntity.get().setAmount(request.amount());
-            repository.save(optProductEntity.get());
-            idData = new IdData(optProductEntity.get().getId());
-        } else {
-            ProductEntity productEntity = mapper.toEntity(request);
-            productEntity = repository.save(productEntity);
-            idData = new IdData(productEntity.getId());
-        }
-
-        log.debug("exit createProduct(..): {}", idData);
-        return idData;
-    }
-
-    public ProductData getProduct(int id) {
-        log.debug("entry getProduct(..); {}", id);
-
-        ProductEntity productEntity = repository.findById(id).orElseThrow(() -> new ProductNotFound(id));
-        ProductData productData = mapper.toProductResponse(productEntity);
-
-        log.debug("exit getProduct(..): {}", productData);
-        return productData;
-    }
+public interface ProductService {
+    IdData createProduct(ProductCreationRequest request);
+    ProductData getProduct(Integer id);
+    ProductData updateProductById(Integer id,ProductCreationRequest request);
+    List<ProductData> getProductsByType(ProductType type);
 }
