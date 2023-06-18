@@ -10,8 +10,10 @@ import java.util.List;
 
 public interface ProductsApi {
     DataResponseApi<IdData> addProduct(ProductCreationRequest creationRequest);
-    DataResponseApi<ProductData> getById(Integer id);
-    DataResponseApi<ProductData> updateProduct(ProductCreationRequest request);
-    DataResponseApi<List<ProductData>> getByType(ProductType type);
 
+    DataResponseApi<ProductData> getById(Integer id);
+
+    DataResponseApi<ProductData> updateProduct(Integer id, ProductCreationRequest request);
+
+    DataResponseApi<List<ProductData>> getByType(ProductType type);
 }

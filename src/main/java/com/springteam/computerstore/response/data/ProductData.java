@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 
 public record ProductData(
     int id,
-
     @JsonProperty("serial-number")
     String serialNumber,
 
