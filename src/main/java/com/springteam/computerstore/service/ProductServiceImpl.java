@@ -3,7 +3,10 @@ package com.springteam.computerstore.service;
 import com.springteam.computerstore.common.InfoMessagesConstants;
 import com.springteam.computerstore.common.ProductType;
 import com.springteam.computerstore.entity.ProductEntity;
+import com.springteam.computerstore.exception.CreationException;
+import com.springteam.computerstore.exception.FindProductsByType;
 import com.springteam.computerstore.exception.ProductNotFound;
+import com.springteam.computerstore.exception.UpdateException;
 import com.springteam.computerstore.mapper.ProductMapper;
 import com.springteam.computerstore.repository.ProductRepository;
 import com.springteam.computerstore.request.ProductCreationRequest;
@@ -41,6 +44,8 @@ public class ProductServiceImpl implements ProductService {
             idData = new IdData(entity.getId());
         }
 
+        repository.findById(entity.getId()).orElseThrow(() -> new CreationException(entity));
+
         log.debug(InfoMessagesConstants.PRODUCT_CREATED, idData);
         return idData;
     }
@@ -60,6 +65,8 @@ public class ProductServiceImpl implements ProductService {
 
         log.debug(InfoMessagesConstants.PRODUCT_UPDATING, id, request);
 
+        ProductEntity beforeUpdating = repository.findById(id).orElseThrow(() -> new ProductNotFound(id));
+
         ProductEntity product = mapper.toEntity(request);
         repository.updateProductById(id
             , product.getType().ordinal()
@@ -68,7 +75,13 @@ public class ProductServiceImpl implements ProductService {
             , product.getPrice()
             , product.getAmount()
             , product.getAdditionalProperty());
+
+        ProductEntity afterUpdating = repository.findById(id).orElseThrow(() -> new ProductNotFound(id));
+
+        if (beforeUpdating.equals(afterUpdating)) throw new UpdateException(beforeUpdating);
+
         ProductData productData = mapper.toProductResponse(product);
+
 
         log.debug(InfoMessagesConstants.PRODUCT_UPDATED, productData);
         return productData;
@@ -79,6 +92,9 @@ public class ProductServiceImpl implements ProductService {
         log.debug(InfoMessagesConstants.GET_PRODUCTS_BY_TYPE, type);
 
         List<ProductEntity> productEntities = repository.findAllByType(type);
+
+        if (productEntities.size() == 0) throw new FindProductsByType(type);
+
         List<ProductData> productDataResponse = productEntities
             .stream()
             .map(mapper::toProductResponse)

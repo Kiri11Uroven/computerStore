@@ -2,7 +2,9 @@ package com.springteam.computerstore.entity;
 
 import com.springteam.computerstore.common.ProductType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import java.math.BigDecimal;
 
@@ -22,12 +24,16 @@ public class ProductEntity {
     private Integer id;
 
     @Column(name = "serial", nullable = false, length = 64, unique = true)
+    @Length(min = 1)
     private String serialNumber;
 
     @Column(nullable = false, length = 64)
+    @Length(min = 1)
     private String manufacturer;
 
     @Column(nullable = false)
+    @DecimalMin(message = "Price should be positive",
+        value = "0")
     private BigDecimal price;
 
     @Column(nullable = false)
