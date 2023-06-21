@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.info.Info;
         description = "Products manage system", version = "1.0.0",
         contact = @Contact(
             name = "Kirill, Artem, Dmitriy",
-            email = "ila5264789@narod.ru,-почта Артема-, dimon550@gmail.com"
+            email = "ila5264789@narod.ru, ranqest@gmail.com, dimon550@gmail.com"
         )
     )
 )
