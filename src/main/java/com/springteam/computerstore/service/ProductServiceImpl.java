@@ -4,17 +4,19 @@ import com.springteam.computerstore.common.InfoMessagesConstants;
 import com.springteam.computerstore.common.ProductType;
 import com.springteam.computerstore.entity.ProductEntity;
 import com.springteam.computerstore.exception.CreationException;
-import com.springteam.computerstore.exception.FindProductsByType;
-import com.springteam.computerstore.exception.ProductNotFound;
+import com.springteam.computerstore.exception.FindProductsByTypeException;
+import com.springteam.computerstore.exception.ProductNotFoundException;
 import com.springteam.computerstore.exception.UpdateException;
 import com.springteam.computerstore.mapper.ProductMapper;
 import com.springteam.computerstore.repository.ProductRepository;
 import com.springteam.computerstore.request.ProductCreationRequest;
 import com.springteam.computerstore.response.data.IdData;
 import com.springteam.computerstore.response.data.ProductData;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Validated
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository repository;
@@ -44,7 +47,7 @@ public class ProductServiceImpl implements ProductService {
             idData = new IdData(entity.getId());
         }
 
-        repository.findById(entity.getId()).orElseThrow(() -> new CreationException(entity));
+        repository.findBySerialNumber(entity.getSerialNumber()).orElseThrow(() -> new CreationException(entity));
 
         log.debug(InfoMessagesConstants.PRODUCT_CREATED, idData);
         return idData;
@@ -53,7 +56,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductData getProduct(Integer id) {
         log.debug(InfoMessagesConstants.GET_PRODUCT, id);
 
-        ProductEntity productEntity = repository.findById(id).orElseThrow(() -> new ProductNotFound(id));
+        ProductEntity productEntity = repository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
         ProductData productData = mapper.toProductResponse(productEntity);
 
         log.debug(InfoMessagesConstants.PRODUCT_RECEIVED, productData);
@@ -65,7 +68,7 @@ public class ProductServiceImpl implements ProductService {
 
         log.debug(InfoMessagesConstants.PRODUCT_UPDATING, id, request);
 
-        ProductEntity beforeUpdating = repository.findById(id).orElseThrow(() -> new ProductNotFound(id));
+        ProductEntity beforeUpdating = repository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
 
         ProductEntity product = mapper.toEntity(request);
         repository.updateProductById(id
@@ -76,7 +79,7 @@ public class ProductServiceImpl implements ProductService {
             , product.getAmount()
             , product.getAdditionalProperty());
 
-        ProductEntity afterUpdating = repository.findById(id).orElseThrow(() -> new ProductNotFound(id));
+        ProductEntity afterUpdating = repository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
 
         if (beforeUpdating.equals(afterUpdating)) throw new UpdateException(beforeUpdating);
 
@@ -93,7 +96,7 @@ public class ProductServiceImpl implements ProductService {
 
         List<ProductEntity> productEntities = repository.findAllByType(type);
 
-        if (productEntities.size() == 0) throw new FindProductsByType(type);
+        if (productEntities.size() == 0) throw new FindProductsByTypeException(type);
 
         List<ProductData> productDataResponse = productEntities
             .stream()
