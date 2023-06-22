@@ -10,8 +10,7 @@ import java.util.List;
 
 public interface ProductService {
     IdData createProduct(ProductCreationRequest request);
-    ProductData getProduct(Integer id);
-    ProductData updateProductById(Integer id,ProductCreationRequest request);
-    @Valid
-    List<ProductData> getProductsByType(ProductType type);
+    ProductData getProduct(@Valid Integer id);
+    ProductData updateProductById(@Valid Integer id,ProductCreationRequest request);
+    List<ProductData> getProductsByType(@Valid ProductType type);
 }

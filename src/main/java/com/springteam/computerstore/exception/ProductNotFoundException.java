@@ -1,7 +1,7 @@
 package com.springteam.computerstore.exception;
 
-public class ProductNotFound extends AppException {
-    public ProductNotFound(int id) {
+public class ProductNotFoundException extends AppException {
+    public ProductNotFoundException(int id) {
         super("Продукта с ID '%d' не найдено".formatted(id));
     }
 }

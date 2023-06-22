@@ -1,8 +1,8 @@
 package com.springteam.computerstore.controller;
 
 import com.springteam.computerstore.exception.CreationException;
-import com.springteam.computerstore.exception.FindProductsByType;
-import com.springteam.computerstore.exception.ProductNotFound;
+import com.springteam.computerstore.exception.FindProductsByTypeException;
+import com.springteam.computerstore.exception.ProductNotFoundException;
 import com.springteam.computerstore.exception.UpdateException;
 import com.springteam.computerstore.response.ErrorDto;
 import com.springteam.computerstore.response.ErrorsResponseApi;
@@ -25,43 +25,89 @@ import java.util.List;
 public class ExceptionsController {
 
     //region 404 Not Found
-    @ExceptionHandler({NoHandlerFoundException.class, ProductNotFound.class,
-        FindProductsByType.class, UpdateException.class, CreationException.class})
-    public ResponseEntity<ErrorsResponseApi> notFound(Exception exception) {
+    @ExceptionHandler({NoHandlerFoundException.class, ProductNotFoundException.class})
+    public ResponseEntity<ErrorsResponseApi> notFound(ProductNotFoundException exception) {
         log.error(exception.getMessage(), exception);
 
         List<ErrorDto> errors = List.of(
-            new ErrorDto(404, HttpStatus.NOT_FOUND.getReasonPhrase(), "No Handler Found"),
-            new ErrorDto(404, HttpStatus.NOT_FOUND.getReasonPhrase(), "No Product Found"),
-            new ErrorDto(404, HttpStatus.NOT_FOUND.getReasonPhrase(), "No products with type found"),
-            new ErrorDto(400, HttpStatus.NOT_FOUND.getReasonPhrase(), "Product not updated"),
-            new ErrorDto(400, HttpStatus.NOT_FOUND.getReasonPhrase(), "Product not created")
+            new ErrorDto(404, HttpStatus.NOT_FOUND.getReasonPhrase(), null)
         );
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .body(new ErrorsResponseApi(errors));
     }
-    //endregion
-
-    //region 400 Not Valid
-    @ExceptionHandler({MethodArgumentNotValidException.class,
-        HttpMessageNotReadableException.class,
-        MethodArgumentTypeMismatchException.class})
-    public ResponseEntity<ErrorsResponseApi> notValid(Exception exception) {
+    @ExceptionHandler({FindProductsByTypeException.class})
+    public ResponseEntity<ErrorsResponseApi> noType(FindProductsByTypeException exception) {
         log.error(exception.getMessage(), exception);
 
         List<ErrorDto> errors = List.of(
-            new ErrorDto(400, HttpStatus.BAD_REQUEST.getReasonPhrase(), "Method Argument Not Valid"),
-            new ErrorDto(400, HttpStatus.BAD_REQUEST.getReasonPhrase(), "Malformed JSON Request"),
-            new ErrorDto(400, HttpStatus.BAD_REQUEST.getReasonPhrase(), "The parameter '%s' of value '%s' could not be converted to type '%s'")
+            new ErrorDto(404, HttpStatus.NOT_FOUND.getReasonPhrase(), "Could not found product with type")
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .body(new ErrorsResponseApi(errors));
+    }
+    @ExceptionHandler({UpdateException.class})
+    public ResponseEntity<ErrorsResponseApi> notUpdated(UpdateException exception) {
+        log.error(exception.getMessage(), exception);
+
+        List<ErrorDto> errors = List.of(
+            new ErrorDto(404, HttpStatus.NOT_FOUND.getReasonPhrase(), "Could not update product")
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .body(new ErrorsResponseApi(errors));
+    }
+    @ExceptionHandler({CreationException.class})
+    public ResponseEntity<ErrorsResponseApi> notCreated(CreationException exception) {
+        log.error(exception.getMessage(), exception);
+
+        List<ErrorDto> errors = List.of(
+            new ErrorDto(404, HttpStatus.NOT_FOUND.getReasonPhrase(), "Could not create product")
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .body(new ErrorsResponseApi(errors));
+    }
+    //end regions
+
+    //region 400 Not Valid
+    @ExceptionHandler({MethodArgumentNotValidException.class})
+    public ResponseEntity<ErrorsResponseApi> notValid(MethodArgumentNotValidException exception) {
+        log.error(exception.getMessage(), exception);
+
+        List<ErrorDto> errors = List.of(
+            new ErrorDto(400, HttpStatus.BAD_REQUEST.getReasonPhrase(), "Argument is not valid")
         );
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
             .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .body(new ErrorsResponseApi(errors));
     }
-    //end region
+    @ExceptionHandler({HttpMessageNotReadableException.class})
+    public ResponseEntity<ErrorsResponseApi> notReadableMessage(HttpMessageNotReadableException exception) {
+        log.error(exception.getMessage(), exception);
+
+        List<ErrorDto> errors = List.of(
+            new ErrorDto(400, HttpStatus.BAD_REQUEST.getReasonPhrase(), "Unreadable JSON")
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .body(new ErrorsResponseApi(errors));
+    }
+    @ExceptionHandler({MethodArgumentTypeMismatchException.class})
+    public ResponseEntity<ErrorsResponseApi> mismatchException(MethodArgumentTypeMismatchException exception) {
+        log.error(exception.getMessage(), exception);
+
+        List<ErrorDto> errors = List.of(
+            new ErrorDto(400, HttpStatus.BAD_REQUEST.getReasonPhrase(), "Incorrect type of argument")
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .body(new ErrorsResponseApi(errors));
+    }
+    //end regions
 
     //region 500 Internal Server Error
     @ExceptionHandler(Exception.class)
