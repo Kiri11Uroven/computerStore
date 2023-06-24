@@ -1,10 +1,10 @@
 package com.springteam.computerstore.controller;
 
-import com.springteam.computerstore.common.ProductType;
-import com.springteam.computerstore.request.ProductCreationRequest;
-import com.springteam.computerstore.response.DataResponseApi;
-import com.springteam.computerstore.response.data.IdData;
-import com.springteam.computerstore.response.data.ProductData;
+import com.springteam.computerstore.entity.ProductType;
+import com.springteam.computerstore.dto.request.ProductCreationRequest;
+import com.springteam.computerstore.dto.response.DataResponseApi;
+import com.springteam.computerstore.dto.response.data.IdData;
+import com.springteam.computerstore.dto.response.data.ProductData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

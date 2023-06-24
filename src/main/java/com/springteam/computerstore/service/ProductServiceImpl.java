@@ -1,21 +1,20 @@
 package com.springteam.computerstore.service;
 
 import com.springteam.computerstore.common.InfoMessagesConstants;
-import com.springteam.computerstore.common.ProductType;
+import com.springteam.computerstore.dto.request.ProductCreationRequest;
+import com.springteam.computerstore.dto.response.data.IdData;
+import com.springteam.computerstore.dto.response.data.ProductData;
 import com.springteam.computerstore.entity.ProductEntity;
+import com.springteam.computerstore.entity.ProductType;
 import com.springteam.computerstore.exception.CreationException;
 import com.springteam.computerstore.exception.FindProductsByTypeException;
 import com.springteam.computerstore.exception.ProductNotFoundException;
-import com.springteam.computerstore.exception.UpdateException;
 import com.springteam.computerstore.mapper.ProductMapper;
 import com.springteam.computerstore.repository.ProductRepository;
-import com.springteam.computerstore.request.ProductCreationRequest;
-import com.springteam.computerstore.response.data.IdData;
-import com.springteam.computerstore.response.data.ProductData;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
@@ -30,7 +29,6 @@ public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository repository;
     private final ProductMapper mapper;
-
 
     public IdData createProduct(ProductCreationRequest request) {
         log.debug(InfoMessagesConstants.CREATE_PRODUCT, request);
@@ -64,11 +62,10 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public ProductData updateProductById(Integer id, ProductCreationRequest request) {
-
         log.debug(InfoMessagesConstants.PRODUCT_UPDATING, id, request);
-
-        ProductEntity beforeUpdating = repository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
+        repository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
 
         ProductEntity product = mapper.toEntity(request);
         repository.updateProductById(id
@@ -79,12 +76,7 @@ public class ProductServiceImpl implements ProductService {
             , product.getAmount()
             , product.getAdditionalProperty());
 
-        ProductEntity afterUpdating = repository.findById(id).orElseThrow(() -> new ProductNotFoundException(id));
-
-        if (beforeUpdating.equals(afterUpdating)) throw new UpdateException(beforeUpdating);
-
         ProductData productData = mapper.toProductResponse(product);
-
 
         log.debug(InfoMessagesConstants.PRODUCT_UPDATED, productData);
         return productData;
@@ -96,7 +88,7 @@ public class ProductServiceImpl implements ProductService {
 
         List<ProductEntity> productEntities = repository.findAllByType(type);
 
-        if (productEntities.size() == 0) throw new FindProductsByTypeException(type);
+        if (productEntities.isEmpty()) throw new FindProductsByTypeException(type);
 
         List<ProductData> productDataResponse = productEntities
             .stream()

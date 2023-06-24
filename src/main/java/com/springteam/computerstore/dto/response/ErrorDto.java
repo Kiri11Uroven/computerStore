@@ -1,4 +1,4 @@
-package com.springteam.computerstore.response;
+package com.springteam.computerstore.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

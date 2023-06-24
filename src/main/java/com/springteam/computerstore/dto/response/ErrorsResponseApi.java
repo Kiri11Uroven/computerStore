@@ -1,4 +1,4 @@
-package com.springteam.computerstore.response;
+package com.springteam.computerstore.dto.response;
 
 import jakarta.validation.constraints.NotNull;
 

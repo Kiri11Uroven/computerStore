@@ -1,4 +1,4 @@
-package com.springteam.computerstore.common;
+package com.springteam.computerstore.configuration;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Contact;

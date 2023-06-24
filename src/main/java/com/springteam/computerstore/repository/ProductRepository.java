@@ -1,6 +1,6 @@
 package com.springteam.computerstore.repository;
 
-import com.springteam.computerstore.common.ProductType;
+import com.springteam.computerstore.entity.ProductType;
 import com.springteam.computerstore.entity.ProductEntity;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -28,5 +28,4 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Integer>
     @Query(nativeQuery = true, value = "UPDATE PRODUCTS set amount = amount + :amount where serial = :serial")
     void updateAmount(String serial, Integer amount);
 
-    boolean existsByTypeAndAdditionalPropertyAndSerialNumber(ProductType type, String additionalProperty, String serialNumber);
 }

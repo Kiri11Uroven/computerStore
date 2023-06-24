@@ -1,4 +1,4 @@
-package com.springteam.computerstore.common;
+package com.springteam.computerstore.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonValue;

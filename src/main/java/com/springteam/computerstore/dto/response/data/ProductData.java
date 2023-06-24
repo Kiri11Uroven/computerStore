@@ -1,10 +1,11 @@
-package com.springteam.computerstore.response.data;
+package com.springteam.computerstore.dto.response.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.springteam.computerstore.common.ProductType;
+import com.springteam.computerstore.entity.ProductType;
+import lombok.Builder;
 
 import java.math.BigDecimal;
-
+@Builder
 public record ProductData(
     int id,
     @JsonProperty("serial-number")

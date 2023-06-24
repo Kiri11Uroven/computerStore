@@ -1,11 +1,7 @@
-package com.springteam.computerstore.controller;
+package com.springteam.computerstore.exception;
 
-import com.springteam.computerstore.exception.CreationException;
-import com.springteam.computerstore.exception.FindProductsByTypeException;
-import com.springteam.computerstore.exception.ProductNotFoundException;
-import com.springteam.computerstore.exception.UpdateException;
-import com.springteam.computerstore.response.ErrorDto;
-import com.springteam.computerstore.response.ErrorsResponseApi;
+import com.springteam.computerstore.dto.response.ErrorDto;
+import com.springteam.computerstore.dto.response.ErrorsResponseApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,15 +9,15 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.List;
 
 @Slf4j
-@ControllerAdvice
+@RestControllerAdvice
 public class ExceptionsController {
 
     //region 404 Not Found
@@ -115,7 +111,7 @@ public class ExceptionsController {
         log.error(exception.getMessage(), exception);
 
         List<ErrorDto> errors = List.of(new ErrorDto(
-            500,
+            0,
             HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
             exception.getMessage()
         ));

@@ -1,12 +1,12 @@
 package com.springteam.computerstore.mapper;
 
+import com.springteam.computerstore.configuration.MapStructConfig;
 import com.springteam.computerstore.entity.ProductEntity;
-import com.springteam.computerstore.request.ProductCreationRequest;
-import com.springteam.computerstore.response.data.ProductData;
-import org.mapstruct.InjectionStrategy;
+import com.springteam.computerstore.dto.request.ProductCreationRequest;
+import com.springteam.computerstore.dto.response.data.ProductData;
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring", injectionStrategy = InjectionStrategy.CONSTRUCTOR)
+@Mapper(config = MapStructConfig.class)
 public interface ProductMapper {
 
     /**

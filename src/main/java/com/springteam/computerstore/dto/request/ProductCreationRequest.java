@@ -1,9 +1,9 @@
-package com.springteam.computerstore.request;
+package com.springteam.computerstore.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.springteam.computerstore.common.ProductType;
+import com.springteam.computerstore.entity.ProductType;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.annotation.Nullable;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -25,6 +25,7 @@ public record ProductCreationRequest(
     BigDecimal price,
 
     @NotNull
+    @Min(1)
     @Schema(description = "Количество единиц продукта.")
     Integer amount,
 
@@ -32,7 +33,7 @@ public record ProductCreationRequest(
     @Schema(description = "Тип продукта.", example = "MONITOR")
     ProductType type,
 
-    @Nullable
+    @NotBlank
     @JsonProperty("properties")
     @Schema(description = "Дополнительный атрибут.", example = "17'")
     String additionalProperty
